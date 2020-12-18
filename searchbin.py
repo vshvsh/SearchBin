@@ -200,10 +200,7 @@ def hex_to_pattern(hex):
 
 def text_to_pattern(text):
 	""" Converts a text string into a pattern. """
-	try:              # Python 3.
-		return [ t.encode('utf-8') for t in text.split("?") ]
-	except TypeError: # Python 2.
-		return [ t for t in text.split("?") ]
+	return text.encode('utf-8')
 
 
 def file_to_pattern(fname):
@@ -330,12 +327,11 @@ def _search_loop(start, end, bsize, pattern, max_matches,
 	Primary search function.
 	Returns nothing.
 	"""
-	len_pattern = len(b"?".join(pattern)) # Byte length of pattern.
+	len_pattern = len(pattern)*30 # Byte length of pattern.
 	read_size = bsize - len_pattern # Amount to read each loop.
+	print(pattern)
+
 	
-	# Convert pattern into a regular expression for insane fast searching.
-	pattern = [ re.escape(p) for p in pattern ]
-	pattern = b".".join(pattern)
 	# Grab regex search function directly to speed up function calls.
 	regex_search = re.compile(pattern, re.DOTALL+re.MULTILINE).search
 	
